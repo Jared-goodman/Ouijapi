@@ -14,9 +14,10 @@ except ImportError:
     )
     import apiai
 
-from gpiozero import Button
+from gpiozero import Button, LED
 
 button = Button(17)
+led = LED(18)
 
 os.system("espeak \"Boo! I'm a ghost.\"")
 while True:
@@ -24,8 +25,10 @@ while True:
 		# Record Audio
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
+			led.on()
 			print("Say something!")
    	 		audio = r.listen(source)
+			led.off()
  
 		speech = ""
 		print("Audio recived. Now parsing.")
