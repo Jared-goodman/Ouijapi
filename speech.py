@@ -17,14 +17,17 @@ except ImportError:
 from gpiozero import Button, LED
 
 button = Button(17)
+switch = Button(21)
 led = LED(18)
+red = LED(26)
 
 os.system("espeak \"Boo! I'm a ghost.\"")
 while True:
-	while button.is_pressed:
+	while button.is_pressed or switch.is_pressed:
 		# Record Audio
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
+			red.off()
 			led.on()
 			print("Say something!")
    	 		audio = r.listen(source)
@@ -42,15 +45,16 @@ while True:
 		except sr.UnknownValueError:
 		    	speech = "What? I didn't understand that."
 	   		print("Google Speech Recognition could not understand audio")
+			red.on()
 		except sr.RequestError as e:
 		    speech = "I'm having trouble connecting to the spirits right now. Check your internet connection."
 		    print("Could not request results from Google Speech Recognition service; {0}".format(e))
 	
-		if (speech == "goodbye"):
+		if ("goodbye" in speech):
 			print("Goodbye!")
 			os.system("espeak Goodbye")
-			break
-		if (speech != "What? I didn't understand that."):
+			button.wait_for_press()
+		if (speech != "What? I didn't understand that." and "goodbye" not in speech):
 		
 			print("sucessfuly recognised audio")
 	
