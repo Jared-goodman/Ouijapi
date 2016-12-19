@@ -14,11 +14,11 @@ except ImportError:
     )
     import apiai
 
-from gpiozero import Button, LED
+from gpiozero import Button, LED, PWMLED
 
 button = Button(17)
 switch = Button(21)
-led = LED(18)
+led = PWMLED(18)
 red = LED(26)
 
 os.system("espeak \"Boo! I'm a ghost.\"")
@@ -28,7 +28,7 @@ while True:
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
 			red.off()
-			led.on()
+			led.pulse()
 			print("Say something!")
    	 		audio = r.listen(source)
 			led.off()
